@@ -14,6 +14,7 @@
 #include <wayland-egl.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#define WOIDSHELL_EGL_IMPLEMENTATION
 #include "woidshell-egl.h"
 
 typedef struct WS_ShellSettings {
