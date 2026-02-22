@@ -3,6 +3,7 @@
 
 Nob_Cmd cmd = {0};
 int main(int argc, char *argv[]) {
+    NOB_GO_REBUILD_YOURSELF(argc, argv)
     nob_cmd_append(&cmd, "gcc");
     nob_cmd_append(&cmd, "-Wall", "-Wextra", "-ggdb");
     nob_cmd_append(&cmd, "-lwayland-client", "-lwayland-egl", "-lEGL", "-lGLESv2");
