@@ -25,6 +25,7 @@ typedef struct WS_EGL_Egl {
 
 } WS_EGL_Egl;
 
+#ifdef WOIDSHELL_OPENGLES2
 const EGLint WS_EGL_ConfigAttribs[] = {
 	EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
 	EGL_RED_SIZE, 8,
@@ -34,15 +35,39 @@ const EGLint WS_EGL_ConfigAttribs[] = {
 	EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 	EGL_NONE,
 };
+#endif
 
+#ifdef WOIDSHELL_OPENGL33
+const EGLint WS_EGL_ConfigAttribs[] = {
+	EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+	EGL_RED_SIZE, 8,
+	EGL_GREEN_SIZE, 8,
+	EGL_BLUE_SIZE, 8,
+	EGL_ALPHA_SIZE, 8,
+	EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
+	EGL_NONE,
+};
+#endif
+
+#ifdef WOIDSHELL_OPENGLES2
 const EGLint WS_EGL_ContextAttribs[] = {
     EGL_CONTEXT_CLIENT_VERSION, 2,
     EGL_NONE,
 };
+#endif
 
+#ifdef WOIDSHELL_OPENGL33
+const EGLint WS_EGL_ContextAttribs[] = {
+    EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+    EGL_CONTEXT_MINOR_VERSION_KHR, 3,
+    EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+    EGL_NONE
+};
+#endif
 
 void WS_EGL_Finish(WS_EGL_Egl* egl);
 void WS_EGL_Init(WS_EGL_Egl* egl, struct wl_display* wl_display); 
+#define WOIDSHELL_EGL_IMPLEMENTATION
 #ifdef WOIDSHELL_EGL_IMPLEMENTATION
 
 PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT;
@@ -84,7 +109,16 @@ void WS_EGL_Init(WS_EGL_Egl* egl, struct wl_display* wl_display) {
     if (!strstr(client_exts, "EGL_EXT_platform_wayland")) {
         printf("EGL_EXT_platform_wayland not supported\n");
     }
-    
+
+#ifdef WOIDSHELL_OPENGL33
+    if (!strstr(client_exts, "EGL_KHR_create_context")) {
+        printf("EGL_KHR_create_context not supported\n");
+    }
+    if (!strstr(client_exts, "EGL_KHR_openGL_profile")) {
+        printf("EGL_KHR_openGL_profile not supported\n");
+    }
+#endif   
+
     eglGetPlatformDisplayEXT = (PFNEGLGETPLATFORMDISPLAYEXTPROC)eglGetProcAddress("eglGetPlatformDisplayEXT");
     if(eglGetPlatformDisplayEXT == NULL) {
         printf("ERROR: failed to get eglGetPlatformDisplayEXT\n");
@@ -103,6 +137,21 @@ void WS_EGL_Init(WS_EGL_Egl* egl, struct wl_display* wl_display) {
     if (eglInitialize(egl->display, NULL, NULL) == EGL_FALSE) {
         printf("failed to eglInitialize egl\n");
     }
+
+#ifdef WOIDSHELL_OPENGLES2
+if (!eglBindAPI(EGL_OPENGL_ES_API)) {
+    printf("Failed to bind OpenGLES2 API: %s\n", eglGetErrorString(eglGetError()));
+    exit(1);
+}
+#endif
+
+#ifdef WOIDSHELL_OPENGL33
+if (!eglBindAPI(EGL_OPENGL_API)) {
+    printf("Failed to bind OpenGLES2 API: %s\n", eglGetErrorString(eglGetError()));
+    exit(1);
+}
+#endif
+
     
     EGLint matched;
     if (!eglChooseConfig(egl->display, WS_EGL_ConfigAttribs, &(egl->config), 1, &matched)) {

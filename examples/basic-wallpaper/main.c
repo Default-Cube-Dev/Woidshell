@@ -1,7 +1,8 @@
 #include <EGL/egl.h>
 #define WOIDSHELL_IMPLEMENTATION
-#include "./protocol/wlr-layer-shell-unstable-v1.h"
-#include "./woidshell.h"
+#define WOIDSHELL_OPENGLES2 // define the backend you're gonna be using, the available options are WOIDSHELL_OPENGLES2 and WOIDSHELL_OPENGL33 (see the opengl33-wallpaper exameple)
+#include "../../protocol/wlr-layer-shell-unstable-v1.h"
+#include "../../woidshell.h"
 #include <GLES2/gl2.h>
 
 void drawfunc(void* data) {
@@ -26,7 +27,7 @@ int main(void) {
 
         .exclusive_zone = 0, // idk why they named it exclusive_zone in the protocol but it's kinda like a gap:
                             // for example if you want to make a bar, 
-                            // you'd set this value to the height of the bar so the windows doesn't overlap with it
+                            // you'd set this value to the height of the bar so the windows don't overlap with it
                             // (see the basic-bar example)
         .margin_l = 0,
         .margin_b = 0,
@@ -38,6 +39,7 @@ int main(void) {
     shell.settings = &settings;
 
     WS_ShellInit(&shell);
+    drawfunc((void*)&shell); // start the drawing loop
 
     while (!WS_ShellShouldClose(&shell)) {} // don't draw here, it's not gonna work. 
                                             // This is due to how wayland handles frames as callbacks,

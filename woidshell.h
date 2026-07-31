@@ -140,7 +140,6 @@ void WS_ShellInit(WS_Shell* shell){
     if (shell->egl->surface == NULL || shell->egl->surface == EGL_NO_SURFACE) printf("ERROR: failed to create egl suface\n");
 
     wl_display_roundtrip(shell->display);
-    shell->settings->drawfunc(shell);
 }
 bool WS_ShellShouldClose(WS_Shell* shell) {return wl_display_dispatch(shell->display) == -1 && !shell->run;}
 

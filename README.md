@@ -1,4 +1,4 @@
-### woidshell - a single-header* layer SHELL library for Wayland that has vOID dependencies
+### woidshell - a single-header* layer *SHELL* library for *W*ayland that has v*OID* (none) dependencies
 
 ### Why? 
 
@@ -140,7 +140,7 @@ When I saw the error I was curios about waybar's dependencies, so I checked it w
 So I tought: "I need to make my own!"
 
 I didn't like all the existing options because they're ither bloated or have very limited capabilities 
-because they use some cursedass markup language or ui toolkit instead of real code, so I tought: "I need to make my own!" and so I did. just look how clean the ldd is:
+because they use some wierdass bespoke markup language or ui toolkit instead of real code, so I tought: "I need to make my own!" and so I did. just look how clean the ldd is:
 
 ```ldd
 linux-vdso.so.1 (0x00007f2ab60ac000)
@@ -154,15 +154,16 @@ linux-vdso.so.1 (0x00007f2ab60ac000)
 	/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f2ab60ae000)
 ```
 
-compare to all the other shells mine uses good old OpenGL (OpenGLES 2 specificlly because that's what was in the [wlr-clients](https://gitlab.freedesktop.org/wlroots/wlr-clients) 
-example but in the future I will try to add support for more backends like regular OpenGL 3.3 core, Vulkan, etc. 
-(OpenGLES kinda feels like a cheatcode dough because you don't need glad to load it and it can even run on your fridge if it has a gpu))
-this gives you more room for creative ideas and increases performance. Wanna try it out? what are you waiting for?! [do it!](#quickstart)
+compare to all the other shells mine has a couple of options for the backend:
+
+- OpenGLESv2
+- OpenGL3.3 core
+- i kinda wanna add a shm backend too but it seems like i'm too dumb for that so make a PR pls :)
 
 
 ### <a name="quickstart"></a> Quickstart
 
-1. check if your wayland compositor has wlroots support, get the `woidshell` and `woidshell-egl` headers and put them somwhere next-to each other.
+1. check if your wayland compositor has wlr layer shell support (aka it's not gnome), get the `woidshell` and `woidshell-egl` headers and put them somwhere next-to each other.
    It's not like egl is optional, it's just nice to split things up :)
 
 2. because this library is so low-level you first have to get the the wlroots boilerplate to interact with the API,
@@ -180,6 +181,5 @@ this gives you more room for creative ideas and increases performance. Wanna try
     wayland-scanner private-code /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml ./protocol/xdg-shell.c
    ```
 
-3. enjoy :D it's a plain old stb-style single-header so checkout the examples! (don't forget to link with all the necessary libraries)
-
+3. enjoy :D checkout the examples! 
 
